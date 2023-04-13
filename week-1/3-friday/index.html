@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Sparrow Photography</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital@0;1&family=PT+Serif:wght@700&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<nav class="nav">
+		<a class="logo" href="index.html">Sparrow Photography</a>
+	</nav>
+
+	<h1>Sparrow Photography</h1>
+
+	<div id="app">Loading...</div>
+
+	<footer>
+		<p>Photos by Jack Sparrow. All rights reserved.</p>
+	</footer>
+
+	<script type="module">
+		import getPhotos from "./api.js";
+
+		const app = document.getElementById("app");
+
+		function getPhotosHTML(photos) {
+			if (!photos) return "Error: There was a problem fetching the photos.";
+
+			function getPhotoHTML(photo) {
+				return `
+					<a href="photo.html?id=${encodeURIComponent(photo.id)}">
+						<figure>
+							<img src="${photo.url}" alt="${photo.description}">
+							<figcaption>${photo.name}</figcaption>
+						</figure>
+					</a>
+				`;
+			}
+
+			const grid = photos.map(getPhotoHTML).join("");
+			return `<div id="photos">${grid}</div>`;
+		}
+
+		async function main() {
+			try {
+				const photos = await getPhotos();
+				app.innerHTML = getPhotosHTML(photos);
+			} catch {
+				app.innerHTML = getPhotosHTML();
+			}
+		}
+
+		main();
+	</script>
+
+</body>
+
+</html>

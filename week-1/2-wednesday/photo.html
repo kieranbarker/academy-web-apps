@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Sparrow Photography</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital@0;1&family=PT+Serif:wght@700&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<nav class="nav">
+		<a class="logo" href="index.html">Sparrow Photography</a>
+	</nav>
+
+	<div id="app">Loading...</div>
+
+	<footer>
+		<p>Photos by Jack Sparrow. All rights reserved.</p>
+	</footer>
+
+	<script>
+		"use strict";
+
+		const app = document.getElementById("app");
+
+		function getPhotoId() {
+			return new URL(window.location.href).searchParams.get("id");
+		}
+
+		function getPhotoHTML(photos) {
+			const id = getPhotoId();
+			if (!id) return "<h1>Not Found</h1>";
+
+			const photo = photos.find((photo) => photo.id === id);
+			if (!photo) return "<h1>Not Found</h1>";
+
+			document.title = `${photo.name} | ${document.title}`;
+
+			return `
+				<h1>${photo.name}</h1>
+				<figure>
+					<img src="${photo.url}" alt="">
+					<figcaption>
+						<p>${photo.description}</p>
+					</figcaption>
+				</figure>
+			`;
+		}
+
+		async function getPhotos() {
+			const API = "https://vanillajsacademy.com/api/photos.json";
+
+			try {
+				const response = await fetch(API);
+				const photos = await response.json();
+				app.innerHTML = getPhotoHTML(photos);
+			} catch {
+				app.innerHTML = getPhotoHTML();
+			}
+		}
+
+		getPhotos();
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Sparrow Photography</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital@0;1&family=PT+Serif:wght@700&display=swap"
+		rel="stylesheet">
+	<style>
+		body {
+			margin: 1em auto;
+			max-width: 50em;
+			width: 88%;
+			font-family: "PT Sans", sans-serif;
+		}
+
+		h1 {
+			font-family: "PT Serif", serif;
+		}
+
+		figure {
+			margin: 0;
+		}
+
+
+		/**
+		 * Grid Layout
+		 */
+
+		@media (min-width: 20em) {
+			#photos {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				grid-template-rows: 1fr;
+				grid-column-gap: 2em;
+				grid-row-gap: 2em;
+			}
+		}
+
+		@media (min-width: 32em) {
+			#photos {
+				grid-template-columns: repeat(3, 1fr);
+			}
+		}
+
+		@media (min-width: 42em) {
+			#photos {
+				grid-template-columns: repeat(4, 1fr);
+			}
+		}
+
+
+		/**
+		 * Nav Menu
+		 */
+
+		.nav {
+			padding: 1em 0;
+		}
+
+		.nav a {
+			text-decoration: none;
+		}
+
+		.nav a:focus,
+		.nav a:hover {
+			text-decoration: underline;
+		}
+
+		.logo {
+			font-family: "PT Serif", serif;
+			font-weight: bold;
+		}
+
+
+		/**
+		 * Footer
+		 */
+
+		footer {
+			border-top: 1px solid #e5e5e5;
+			margin-top: 5em;
+			font-style: italic;
+		}
+
+
+		/**
+		 * Responsive Images
+		 */
+
+		img {
+			height: auto;
+			max-width: 100%;
+		}
+	</style>
+</head>
+
+<body>
+
+	<nav class="nav">
+		<a class="logo" href="index.html">Sparrow Photography</a>
+	</nav>
+
+	<h1>Sparrow Photography</h1>
+
+	<div id="app">Loading...</div>
+
+	<footer>
+		<p>Photos by Jack Sparrow. All rights reserved.</p>
+	</footer>
+
+	<script>
+		"use strict";
+
+		const app = document.getElementById("app");
+
+		function getPhotosHTML(photos) {
+			if (!photos) return "Error: There was a problem fetching the photos.";
+
+			function getPhotoHTML(photo) {
+				return `
+					<figure>
+						<img src="${photo.url}" alt="${photo.description}">
+						<figcaption>${photo.name}</figcaption>
+					</figure>
+				`;
+			}
+
+			const grid = photos.map(getPhotoHTML).join("");
+			return `<div id="photos">${grid}</div>`;
+		}
+
+		async function getPhotos() {
+			const API = "https://vanillajsacademy.com/api/photos.json";
+
+			try {
+				const response = await fetch(API);
+				const photos = await response.json();
+				app.innerHTML = getPhotosHTML(photos);
+			} catch {
+				app.innerHTML = getPhotosHTML();
+			}
+		}
+
+		getPhotos();
+	</script>
+
+</body>
+
+</html>
